@@ -9,34 +9,72 @@ export default class ReactRevolverMenu extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        showStyle : false
+        showStyle : false,
+        subItems  : [],
+        prevItems : [],
+        timeout   : false
       };
     }
 
     componentDidMount() {
-      setTimeout(() => {
-        console.log('setting');
-        this.setState({ showStyle : true });
-      }, 1000);
+      this.startTimeout();
     }
 
-    itemClick(cb, e) {
+    componentWillUnmount() {
+      clearTimeout(this.timeout);
+    }
+
+    startTimeout(cb) {
+      this.timeout = setTimeout(() => {
+        this.setState({ showStyle : true, timeout : false });
+      }, 500);
+    }
+
+    checkTimeout() {
+      if (this.state.timeout) {
+        this.startTimeout();
+      }
+    }
+
+    back() {
+      let items = this.props.items;
+      if (this.state.prevItems) items = this.state.prevItems;
+      this.setState({
+        subItems  : items,
+        prevItems : this.props.items,
+        showStyle : false,
+        timeout   : true
+      });
+    }
+
+    itemClick(item, e) {
       e.preventDefault();
       e.stopPropagation();
-      cb();
+      if (typeof item.onClick == 'function') item.onClick();
+      if (item.items && item.items.length) {
+        let prevItems = this.props.items;
+        if (this.state.subItems.length) prevItems = this.state.subItems;
+        this.setState({
+          subItems  : item.items,
+          prevItems : prevItems,
+          showStyle : false,
+          timeout   : true
+        });
+      }
     }
 
-    getStyle(interval, idx) {
-      if (!this.state.showStyle) return {};
+    getStyle(item, interval, idx) {
+      if (!this.state.showStyle || item.className == 'center') return {};
       let width = this.props.diameter || '12em';
-      let deg = `${interval * idx}deg`;
+      const deg = interval * idx ? (interval * idx) : interval;
 
       let style = {
-        transform : `rotate(${deg}) translate(${width}) rotate(-${deg})`
+        transform : `rotate(${deg}deg) translate(${width}) rotate(-${deg}deg)`
       };
 
       // edge cases: top & bottom
-      if ((interval * idx)/180 == 1) {
+      console.log(deg);
+      if (deg/180 == 1) {
         style.transform = `translate(-${width})`
       } else if (Number.isInteger((interval * idx)/180)) {
         style.transform = `translate(${width})`
@@ -46,38 +84,50 @@ export default class ReactRevolverMenu extends Component {
 
     renderItem(item, idx) {
       let interval = parseInt(360 / this.props.items.length);
-
-      const style = this.getStyle(interval, idx);
+      if (this.state.subItems.length) interval = parseInt(360 / this.state.subItems.length)
+      const style = this.getStyle(item, interval, idx);
 
       const props = {
         key       : idx,
-        className : `menu-item ${item.faIcon || ''}`,
-        onClick   : this.itemClick.bind(this, item.onClick),
+        className : `menu-item ${item.className || ''} ${this.state.showStyle ? 'show' : ''}`,
+        onClick   : this.itemClick.bind(this, item),
         style     : style,
       };
 
       switch(item.type) {
         case 'img':
-          return <img {...props} />
+          return <div {...props} ><img src={item.src} /></div>
         case 'text':
           return <div {...props}>{item.text}</div>
         case 'icon':
-          return <i {...props} />
+          return <div {...props}><i className={item.faIcon} /></div>
       }
     }
 
     renderItems() {
-      return _.map(this.props.items, (item, idx) => {
+      let items = this.props.items;
+      if (this.state.subItems.length) items = this.state.subItems;
+      return _.map(items, (item, idx) => {
         return this.renderItem(item, idx);
       });
     }
 
+    renderCenter() {
+      return (
+        <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}
+             onClick={this.back.bind(this)}>
+          <i className='fa fa-3x fa-arrow-circle-o-left'/>
+        </div>
+      );
+    }
+
     render() {
-      console.log('rendering');
+      this.checkTimeout();
       return (
         <div className="react-revolver-menu">
           <div className='circle-container'>
           	{this.renderItems()}
+            {this.renderCenter()}
           </div>
         </div>
       );

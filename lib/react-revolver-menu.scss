@@ -11,10 +11,13 @@
     border: dashed 1px;
     border-radius: 50%;
     margin: 1.75em auto 0;
+
   }
   .circle-container .menu-item {
     transition: all .5s ease-in-out;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     position: absolute;
     top: 50%; left: 50%;
@@ -22,7 +25,14 @@
     text-align: center;
     line-height: 4em;
     margin: -2em; /* 2em = 4em/2 */ /* half the width */
+    opacity: 0;
+    cursor: pointer;
   }
+
+  .circle-container .menu-item.show {
+    opacity: 1;
+  }
+
   .circle-container img { display: block; width: 100%; }
 
 }
