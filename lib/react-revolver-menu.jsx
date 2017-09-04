@@ -5,24 +5,57 @@ import _ from 'lodash';
 
 import './react-revolver-menu.scss';
 
-export default class ReactRevolverMenu extends React.Component {
+export default class ReactRevolverMenu extends Component {
     constructor(props) {
       super(props);
       this.state = {
-
+        showStyle : false
       };
     }
 
-    renderItem(item, idx) {
-      let style = {
+    componentDidMount() {
+      setTimeout(() => {
+        console.log('setting');
+        this.setState({ showStyle : true });
+      }, 1000);
+    }
 
+    itemClick(cb, e) {
+      e.preventDefault();
+      e.stopPropagation();
+      cb();
+    }
+
+    getStyle(interval, idx) {
+      if (!this.state.showStyle) return {};
+      let width = this.props.diameter || '12em';
+      let deg = `${interval * idx}deg`;
+
+      let style = {
+        transform : `rotate(${deg}) translate(${width}) rotate(-${deg})`
       };
+
+      // edge cases: top & bottom
+      if ((interval * idx)/180 == 1) {
+        style.transform = `translate(-${width})`
+      } else if (Number.isInteger((interval * idx)/180)) {
+        style.transform = `translate(${width})`
+      }
+      return style;
+    }
+
+    renderItem(item, idx) {
+      let interval = parseInt(360 / this.props.items.length);
+
+      const style = this.getStyle(interval, idx);
+
       const props = {
-        className : `item-${idx} ${item.faIcon}`,
+        key       : idx,
+        className : `menu-item ${item.faIcon || ''}`,
         onClick   : this.itemClick.bind(this, item.onClick),
         style     : style,
+      };
 
-      }
       switch(item.type) {
         case 'img':
           return <img {...props} />
@@ -40,6 +73,7 @@ export default class ReactRevolverMenu extends React.Component {
     }
 
     render() {
+      console.log('rendering');
       return (
         <div className="react-revolver-menu">
           <div className='circle-container'>
