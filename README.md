@@ -5,6 +5,7 @@ WIP
 
 
 # Props
+```
 items : PropTypes.arrayOf(PropTypes.shape({
   type      : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
   key       : PropTypes.oneOfType([
@@ -20,6 +21,7 @@ items : PropTypes.arrayOf(PropTypes.shape({
 diameter     : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 animateDelay : PropTypes.number,
 border       : PropTypes.oneOf(['dashed', 'solid', 'none'])
+```
 
 
 Get the AMD module located at `react-revolver-menu.js` and include it in your project.
