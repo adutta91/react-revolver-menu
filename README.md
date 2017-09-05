@@ -4,7 +4,7 @@ WIP
 
 
 
-#Props
+# Props
 items : PropTypes.arrayOf(PropTypes.shape({
   type      : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
   key       : PropTypes.oneOfType([
