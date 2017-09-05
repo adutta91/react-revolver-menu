@@ -40,13 +40,19 @@ export default class ReactRevolverMenu extends Component {
     }
 
     setStyles(val) {
-      let items = this.state.subItems.length ? this.state.subItems : this.props.items;
+      const items = this.state.subItems.length ? this.state.subItems : this.props.items;
       let showStyle = _.clone(this.state.showStyle);
+      let duration = (this.props.animateDelay || 0);
+
+      const styleCb = (idx) => {
+        showStyle[idx] = val;
+        this.setState({ showStyle });
+      };
+
       _.forEach(items, (item, idx) => {
-        setTimeout(() => {
-          showStyle[idx] = val;
-          this.setState({ showStyle });
-        }, idx * (this.props.animateDelay || 25));
+        if (duration) {
+          setTimeout(styleCb.bind(this, idx), idx * duration);
+        } else styleCb(idx);
       });
     }
 
@@ -85,9 +91,32 @@ export default class ReactRevolverMenu extends Component {
       }
     }
 
+    circleStyle() {
+      let width = parseInt(this.props.diameter) || 12;
+
+      let style = {
+        width   : `${width*2}em`,
+        height  : `${width*2}em`,
+        padding : `${(width/2)}em`
+      };
+
+      switch(this.props.border) {
+        case 'solid':
+          style.border = 'solid 1px';
+          break;
+        case 'dashed':
+          style.border = 'dashed 1px';
+          break;
+        default:
+          break;
+      }
+
+      return style;
+    }
+
     getStyle(item, interval, idx) {
       if (!this.state.showStyle[idx] || item.className == 'center') return {};
-      let width = this.props.diameter || '12em';
+      let width = `${this.props.diameter}em` || '12em';
       let deg = (interval * idx) - 90;
 
       let style = {
@@ -105,7 +134,7 @@ export default class ReactRevolverMenu extends Component {
       const props = {
         key       : idx,
         // key       : item.key,
-        className : `menu-item ${item.className || ''} ${this.state.showStyle ? 'show' : ''}`,
+        className : `menu-item ${item.className || ''} ${this.state.showStyle[idx] ? 'show' : ''}`,
         onClick   : this.itemClick.bind(this, item),
         style     : style,
       };
@@ -131,6 +160,8 @@ export default class ReactRevolverMenu extends Component {
     renderCenter() {
       let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
       if (!this.state.prevItems.length) back = null;
+
+      // TODO: display prev selected item in center
       return (
         <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}>
           {back}
@@ -140,9 +171,10 @@ export default class ReactRevolverMenu extends Component {
 
     render() {
       this.checkTimeout();
+
       return (
         <div className="react-revolver-menu">
-          <div className={`circle-container ${this.state.showStyle ? 'show' : ''}`}>
+          <div style={this.circleStyle()} className={`circle-container ${this.state.showStyle ? 'show' : ''}`}>
           	{this.renderItems()}
             {this.renderCenter()}
           </div>
@@ -165,6 +197,6 @@ ReactRevolverMenu.propTypes = {
     onClick   : PropTypes.func
   })).isRequired,
   diameter     : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  animate      : PropTypes.bool,
-  animateDelay : PropTypes.number
+  animateDelay : PropTypes.number,
+  border       : PropTypes.oneOf(['dashed', 'solid', 'none'])
 };
