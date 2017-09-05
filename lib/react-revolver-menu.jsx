@@ -9,7 +9,7 @@ export default class ReactRevolverMenu extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        showStyle : false,
+        showStyle : {},
         subItems  : [],
         prevItems : [],
         timeout   : false,
@@ -28,7 +28,8 @@ export default class ReactRevolverMenu extends Component {
     startTimeout(cb) {
       this.timeout = setTimeout(() => {
         if (this.state.timeoutCb) this.state.timeoutCb();
-        this.setState({ showStyle : true, timeout : false });
+        this.setStyles(true);
+        this.setState({ timeout : false });
       }, 500);
     }
 
@@ -38,11 +39,22 @@ export default class ReactRevolverMenu extends Component {
       }
     }
 
+    setStyles(val) {
+      let items = this.state.subItems.length ? this.state.subItems : this.props.items;
+      let showStyle = _.clone(this.state.showStyle);
+      _.forEach(items, (item, idx) => {
+        setTimeout(() => {
+          showStyle[idx] = val;
+          this.setState({ showStyle });
+        }, idx * (this.props.animateDelay || 25));
+      });
+    }
+
     back() {
       let items = this.props.items;
       if (this.state.prevItems) items = this.state.prevItems;
+      this.setStyles(false);
       this.setState({
-        showStyle : false,
         timeout   : true,
         timeoutCb : () => {
           this.setState({
@@ -60,8 +72,8 @@ export default class ReactRevolverMenu extends Component {
       if (item.items && item.items.length) {
         let prevItems = this.props.items;
         if (this.state.subItems.length) prevItems = this.state.subItems;
+        this.setStyles(false);
         this.setState({
-          showStyle : false,
           timeout   : true,
           timeoutCb : () => {
             this.setState({
@@ -74,7 +86,7 @@ export default class ReactRevolverMenu extends Component {
     }
 
     getStyle(item, interval, idx) {
-      if (!this.state.showStyle || item.className == 'center') return {};
+      if (!this.state.showStyle[idx] || item.className == 'center') return {};
       let width = this.props.diameter || '12em';
       let deg = (interval * idx) - 90;
 
@@ -152,7 +164,7 @@ ReactRevolverMenu.propTypes = {
     items     : PropTypes.arrayOf(PropTypes.object),
     onClick   : PropTypes.func
   })).isRequired,
-  diameter : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  animate  : PropTypes.bool
-
+  diameter     : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  animate      : PropTypes.bool,
+  animateDelay : PropTypes.number
 };
