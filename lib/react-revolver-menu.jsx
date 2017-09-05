@@ -47,7 +47,7 @@ export default class ReactRevolverMenu extends Component {
         timeoutCb : () => {
           this.setState({
             subItems  : items,
-            prevItems : this.props.items // TODO - find proper prevItems
+            prevItems : [] // TODO - find proper prevItems
           })
         }
       });
@@ -76,18 +76,12 @@ export default class ReactRevolverMenu extends Component {
     getStyle(item, interval, idx) {
       if (!this.state.showStyle || item.className == 'center') return {};
       let width = this.props.diameter || '12em';
-      const deg = interval * idx ? (interval * idx) : interval;
+      let deg = (interval * idx) - 90;
 
       let style = {
-        transform : `rotate(${deg}deg) translate(${width}) rotate(-${deg}deg)`
+        transform : `rotate(${deg}deg) translate(${width}) rotate(${deg * -1}deg)`
       };
 
-      // edge cases: top & bottom
-      if (deg/180 == 1) {
-        style.transform = `translate(-${width})`
-      } else if (Number.isInteger((interval * idx)/180)) {
-        style.transform = `translate(${width})`
-      }
       return style;
     }
 
@@ -98,6 +92,7 @@ export default class ReactRevolverMenu extends Component {
 
       const props = {
         key       : idx,
+        // key       : item.key,
         className : `menu-item ${item.className || ''} ${this.state.showStyle ? 'show' : ''}`,
         onClick   : this.itemClick.bind(this, item),
         style     : style,
@@ -105,11 +100,11 @@ export default class ReactRevolverMenu extends Component {
 
       switch(item.type) {
         case 'img':
-          return <div {...props} ><img src={item.src} /></div>
+          return <div {...props} ><img src={item.src} /></div>;
         case 'text':
-          return <div {...props}>{item.text}</div>
+          return <div {...props}>{item.text}</div>;
         case 'icon':
-          return <div {...props}><i className={item.faIcon} /></div>
+          return <div {...props}><i className={item.faIcon} /></div>;
       }
     }
 
@@ -123,7 +118,7 @@ export default class ReactRevolverMenu extends Component {
 
     renderCenter() {
       let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
-      if (!this.state.subItems.length) back = null;
+      if (!this.state.prevItems.length) back = null;
       return (
         <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}>
           {back}
@@ -147,6 +142,9 @@ export default class ReactRevolverMenu extends Component {
 ReactRevolverMenu.propTypes = {
   items : PropTypes.arrayOf(PropTypes.shape({
     type      : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
+    key       : PropTypes.oneOfType([
+      PropTypes.number, PropTypes.string
+    ]).isRequired,
     text      : PropTypes.string,
     src       : PropTypes.string,
     faIcon    : PropTypes.string,
