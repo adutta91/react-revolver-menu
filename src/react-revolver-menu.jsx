@@ -11,9 +11,9 @@ export default class ReactRevolverMenu extends Component {
       this.state = {
         showStyle : {},
         subItems  : [],
-        prevItems : [],
         timeout   : false,
-        timeoutCb : null
+        timeoutCb : null,
+        history   : []
       };
     }
 
@@ -57,34 +57,36 @@ export default class ReactRevolverMenu extends Component {
     }
 
     back() {
-      let items = this.props.items;
-      if (this.state.prevItems) items = this.state.prevItems;
+      let items = this.props.items; // TODO - choose proper back
+      _.forEach(this.state.history.slice(0, this.state.history.length - 1), (prevIdx) => {
+        items = items[prevIdx].items;
+      });
       this.setStyles(false);
       this.setState({
         timeout   : true,
+        history   : this.state.history.slice(0, this.state.history.length - 1),
         timeoutCb : () => {
           this.setState({
-            subItems  : items,
-            prevItems : [] // TODO - find proper prevItems
+            subItems : items,
           })
         }
       });
     }
 
-    itemClick(item, e) {
+    itemClick(item, idx, e) {
       e.preventDefault();
       e.stopPropagation();
       if (typeof item.onClick == 'function') item.onClick();
       if (item.items && item.items.length) {
-        let prevItems = this.props.items;
-        if (this.state.subItems.length) prevItems = this.state.subItems;
         this.setStyles(false);
+        let history = this.state.history;
+        history.push(idx);
         this.setState({
           timeout   : true,
+          history   : history,
           timeoutCb : () => {
             this.setState({
-              subItems  : item.items,
-              prevItems : prevItems
+              subItems : item.items
             });
           }
         });
@@ -114,7 +116,25 @@ export default class ReactRevolverMenu extends Component {
       return style;
     }
 
-    getStyle(item, interval, idx) {
+    swingStyle(item, interval, idx) {
+      if (item.className == 'center') return {};
+      let width = `${this.props.diameter}em` || '12em';
+      let deg = (interval * idx) - 90;
+      let style = {
+        transform : `rotate(${deg}deg) translate(${width}) rotate(${deg * -1}deg)`
+      };
+
+      // TODO: swing animation
+      if (!this.state.showStyle[idx]) {
+
+      } else {
+
+      }
+
+      return style;
+    }
+
+    radiateStyle(item, interval, idx) {
       if (!this.state.showStyle[idx] || item.className == 'center') return {};
       let width = `${this.props.diameter}em` || '12em';
       let deg = (interval * idx) - 90;
@@ -126,6 +146,16 @@ export default class ReactRevolverMenu extends Component {
       return style;
     }
 
+    getStyle(item, interval, idx) {
+      const animateStyle = this.props.animateStyle || 'radiate';
+
+      switch(animateStyle) {
+        case 'radiate': return this.radiateStyle(item, interval, idx);
+        case 'swing': return this.swingStyle(item, interval, idx);
+        default: return {};
+      }
+    }
+
     renderItem(item, idx) {
       let interval = parseInt(360 / this.props.items.length);
       if (this.state.subItems.length) interval = parseInt(360 / this.state.subItems.length)
@@ -133,9 +163,8 @@ export default class ReactRevolverMenu extends Component {
 
       const props = {
         key       : idx,
-        // key       : item.key,
         className : `menu-item ${item.className || ''} ${this.state.showStyle[idx] ? 'show' : ''}`,
-        onClick   : this.itemClick.bind(this, item),
+        onClick   : this.itemClick.bind(this, item, idx),
         style     : style,
       };
 
@@ -159,7 +188,7 @@ export default class ReactRevolverMenu extends Component {
 
     renderCenter() {
       let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
-      if (!this.state.prevItems.length) back = null;
+      if (!this.state.history.length) back = null;
 
       // TODO: display prev selected item in center
       return (
@@ -171,7 +200,6 @@ export default class ReactRevolverMenu extends Component {
 
     render() {
       this.checkTimeout();
-
       return (
         <div className="react-revolver-menu">
           <div style={this.circleStyle()} className={`circle-container ${this.state.showStyle ? 'show' : ''}`}>
@@ -186,9 +214,6 @@ export default class ReactRevolverMenu extends Component {
 ReactRevolverMenu.propTypes = {
   items : PropTypes.arrayOf(PropTypes.shape({
     type      : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
-    key       : PropTypes.oneOfType([
-      PropTypes.number, PropTypes.string
-    ]).isRequired,
     text      : PropTypes.string,
     src       : PropTypes.string,
     faIcon    : PropTypes.string,
@@ -198,5 +223,6 @@ ReactRevolverMenu.propTypes = {
   })).isRequired,
   diameter     : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   animateDelay : PropTypes.number,
+  animateStyle : PropTypes.oneOf(['radiate', 'swing']),
   border       : PropTypes.oneOf(['dashed', 'solid', 'none'])
 };

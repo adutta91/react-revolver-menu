@@ -128,9 +128,9 @@
 	    this.state = {
 	      showStyle: {},
 	      subItems: [],
-	      prevItems: [],
 	      timeout: false,
-	      timeoutCb: null
+	      timeoutCb: null,
+	      history: []
 	    };
 	  }
 
@@ -187,42 +187,42 @@
 	    value: function back() {
 	      var _this3 = this;
 
-	      var items = this.props.items;
-	      if (this.state.prevItems) items = this.state.prevItems;
+	      var items = this.props.items; // TODO - choose proper back
+	      _lodash2['default'].forEach(this.state.history.slice(0, this.state.history.length - 1), function (prevIdx) {
+	        items = items[prevIdx].items;
+	      });
 	      this.setStyles(false);
 	      this.setState({
 	        timeout: true,
+	        history: this.state.history.slice(0, this.state.history.length - 1),
 	        timeoutCb: function timeoutCb() {
 	          _this3.setState({
-	            subItems: items,
-	            prevItems: [] // TODO - find proper prevItems
+	            subItems: items
 	          });
 	        }
 	      });
 	    }
 	  }, {
 	    key: 'itemClick',
-	    value: function itemClick(item, e) {
+	    value: function itemClick(item, idx, e) {
 	      var _this4 = this;
 
 	      e.preventDefault();
 	      e.stopPropagation();
 	      if (typeof item.onClick == 'function') item.onClick();
 	      if (item.items && item.items.length) {
-	        (function () {
-	          var prevItems = _this4.props.items;
-	          if (_this4.state.subItems.length) prevItems = _this4.state.subItems;
-	          _this4.setStyles(false);
-	          _this4.setState({
-	            timeout: true,
-	            timeoutCb: function timeoutCb() {
-	              _this4.setState({
-	                subItems: item.items,
-	                prevItems: prevItems
-	              });
-	            }
-	          });
-	        })();
+	        this.setStyles(false);
+	        var _history = this.state.history;
+	        _history.push(idx);
+	        this.setState({
+	          timeout: true,
+	          history: _history,
+	          timeoutCb: function timeoutCb() {
+	            _this4.setState({
+	              subItems: item.items
+	            });
+	          }
+	        });
 	      }
 	    }
 	  }, {
@@ -250,8 +250,23 @@
 	      return style;
 	    }
 	  }, {
-	    key: 'getStyle',
-	    value: function getStyle(item, interval, idx) {
+	    key: 'swingStyle',
+	    value: function swingStyle(item, interval, idx) {
+	      if (item.className == 'center') return {};
+	      var width = this.props.diameter + 'em' || '12em';
+	      var deg = interval * idx - 90;
+	      var style = {
+	        transform: 'rotate(' + deg + 'deg) translate(' + width + ') rotate(' + deg * -1 + 'deg)'
+	      };
+
+	      // TODO: swing animation
+	      if (!this.state.showStyle[idx]) {} else {}
+
+	      return style;
+	    }
+	  }, {
+	    key: 'radiateStyle',
+	    value: function radiateStyle(item, interval, idx) {
 	      if (!this.state.showStyle[idx] || item.className == 'center') return {};
 	      var width = this.props.diameter + 'em' || '12em';
 	      var deg = interval * idx - 90;
@@ -263,6 +278,20 @@
 	      return style;
 	    }
 	  }, {
+	    key: 'getStyle',
+	    value: function getStyle(item, interval, idx) {
+	      var animateStyle = this.props.animateStyle || 'radiate';
+
+	      switch (animateStyle) {
+	        case 'radiate':
+	          return this.radiateStyle(item, interval, idx);
+	        case 'swing':
+	          return this.swingStyle(item, interval, idx);
+	        default:
+	          return {};
+	      }
+	    }
+	  }, {
 	    key: 'renderItem',
 	    value: function renderItem(item, idx) {
 	      var interval = parseInt(360 / this.props.items.length);
@@ -271,9 +300,8 @@
 
 	      var props = {
 	        key: idx,
-	        // key       : item.key,
 	        className: 'menu-item ' + (item.className || '') + ' ' + (this.state.showStyle[idx] ? 'show' : ''),
-	        onClick: this.itemClick.bind(this, item),
+	        onClick: this.itemClick.bind(this, item, idx),
 	        style: style
 	      };
 
@@ -313,7 +341,7 @@
 	    key: 'renderCenter',
 	    value: function renderCenter() {
 	      var back = _react2['default'].createElement('i', { className: 'fa fa-3x fa-arrow-circle-o-left', onClick: this.back.bind(this) });
-	      if (!this.state.prevItems.length) back = null;
+	      if (!this.state.history.length) back = null;
 
 	      // TODO: display prev selected item in center
 	      return _react2['default'].createElement(
@@ -326,7 +354,6 @@
 	    key: 'render',
 	    value: function render() {
 	      this.checkTimeout();
-
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'react-revolver-menu' },
@@ -349,7 +376,6 @@
 	ReactRevolverMenu.propTypes = {
 	  items: _propTypes2['default'].arrayOf(_propTypes2['default'].shape({
 	    type: _propTypes2['default'].oneOf(['img', 'icon', 'text']).isRequired,
-	    key: _propTypes2['default'].oneOfType([_propTypes2['default'].number, _propTypes2['default'].string]).isRequired,
 	    text: _propTypes2['default'].string,
 	    src: _propTypes2['default'].string,
 	    faIcon: _propTypes2['default'].string,
@@ -359,6 +385,7 @@
 	  })).isRequired,
 	  diameter: _propTypes2['default'].oneOfType([_propTypes2['default'].number, _propTypes2['default'].string]),
 	  animateDelay: _propTypes2['default'].number,
+	  animateStyle: _propTypes2['default'].oneOf(['radiate', 'swing']),
 	  border: _propTypes2['default'].oneOf(['dashed', 'solid', 'none'])
 	};
 	module.exports = exports['default'];
@@ -40658,19 +40685,17 @@
 	  animateDelay: 10,
 	  diameter: 10,
 	  border: 'dashed',
+	  animateStyle: 'swing',
 	  items: [{
 	    type: 'icon',
 	    faIcon: 'fa fa-user-circle-o fa-3x',
-	    key: 0,
 	    items: [{
 	      type: 'text',
 	      text: '4',
-	      key: 5,
 	      items: []
 	    }, {
 	      type: 'text',
 	      text: '5',
-	      key: 6,
 	      items: [],
 	      onClick: function onClick() {
 	        window.alert('yay!!! you found ze treasure!!!');
@@ -40678,13 +40703,34 @@
 	    }, {
 	      type: 'text',
 	      text: '6',
-	      key: 7,
-	      items: []
+	      items: [{
+	        type: 'text',
+	        text: '7',
+	        items: []
+	      }, {
+	        type: 'text',
+	        text: '8',
+	        items: [],
+	        onClick: function onClick() {
+	          window.alert('yay!!! you found ze treasure!!!');
+	        }
+	      }, {
+	        type: 'text',
+	        text: '9',
+	        items: []
+	      }, {
+	        type: 'text',
+	        text: '10',
+	        items: []
+	      }, {
+	        type: 'text',
+	        text: '11',
+	        items: []
+	      }]
 	    }]
 	  }, {
 	    type: 'icon',
 	    faIcon: 'fa fa-question-circle-o fa-3x',
-	    key: 1,
 	    items: [],
 	    onClick: function onClick() {
 	      window.alert('yay!!! you found ze treasure!!!');
@@ -40692,27 +40738,22 @@
 	  }, {
 	    type: 'icon',
 	    faIcon: 'fa fa-book fa-3x',
-	    key: 2,
 	    items: []
 	  }, {
 	    type: 'icon',
 	    faIcon: 'fa fa-bell fa-3x',
-	    key: 3,
 	    items: []
 	  }, {
 	    type: 'icon',
 	    faIcon: 'fa fa-binoculars fa-3x',
-	    key: 4,
 	    items: []
 	  }, {
 	    type: 'icon',
 	    faIcon: 'fa fa-beer fa-3x',
-	    key: 8,
 	    items: []
 	  }, {
 	    type: 'icon',
 	    faIcon: 'fa fa-car fa-3x',
-	    key: 9,
 	    items: []
 	  }]
 	};
