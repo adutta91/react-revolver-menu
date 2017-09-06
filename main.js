@@ -259,9 +259,6 @@
 	        transform: 'rotate(' + deg + 'deg) translate(' + width + ') rotate(' + deg * -1 + 'deg)'
 	      };
 
-	      // TODO: swing animation
-	      if (!this.state.showStyle[idx]) {} else {}
-
 	      return style;
 	    }
 	  }, {
@@ -343,7 +340,6 @@
 	      var back = _react2['default'].createElement('i', { className: 'fa fa-3x fa-arrow-circle-o-left', onClick: this.back.bind(this) });
 	      if (!this.state.history.length) back = null;
 
-	      // TODO: display prev selected item in center
 	      return _react2['default'].createElement(
 	        'div',
 	        { className: 'menu-item center ' + (this.state.showStyle ? 'show' : '') },
@@ -22778,7 +22774,7 @@
 
 
 	// module
-	exports.push([module.id, ".react-revolver-menu {\n  /**\n  * Position icons into circle (SO)\n  * http://stackoverflow.com/q/12813573/1397351\n  */\n}\n\n.react-revolver-menu .circle-container {\n  position: relative;\n  border-radius: 50%;\n  margin: 1.75em auto 0;\n}\n\n.react-revolver-menu .circle-container .menu-item {\n  transition: all .5s ease-in-out;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 4em;\n  height: 4em;\n  text-align: center;\n  line-height: 4em;\n  margin: -2em;\n  /* 2em = 4em/2 */\n  /* half the width */\n  opacity: 0;\n  cursor: pointer;\n}\n\n.react-revolver-menu .circle-container .menu-item.show {\n  opacity: 1;\n}\n\n.react-revolver-menu .circle-container img {\n  display: block;\n  width: 100%;\n}\n", ""]);
+	exports.push([module.id, "@keyframes bounce {\n  0% {\n    transform: scale(1.1);\n    opacity: 1;\n  }\n  50% {\n    transform: scale(1.6);\n    opacity: .7;\n  }\n  60% {\n    transform: scale(0.6);\n    opacity: 1;\n  }\n  80% {\n    transform: scale(0.95);\n  }\n  100% {\n    transform: scale(0.85);\n  }\n}\n\n.bounce {\n  animation: bounce 1s .5s;\n  transform: scale(0.85);\n}\n\n.react-revolver-menu {\n  /**\n  * Position icons into circle (SO)\n  * http://stackoverflow.com/q/12813573/1397351\n  */\n}\n\n.react-revolver-menu .circle-container {\n  position: relative;\n  border-radius: 50%;\n  margin: 1.75em auto 0;\n}\n\n.react-revolver-menu .circle-container .menu-item {\n  transition: all .5s ease-in-out;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  overflow: hidden;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  width: 4em;\n  height: 4em;\n  text-align: center;\n  line-height: 4em;\n  margin: -2em;\n  /* 2em = 4em/2 */\n  /* half the width */\n  opacity: 0;\n  cursor: pointer;\n}\n\n.react-revolver-menu .circle-container .menu-item.show {\n  opacity: 1;\n}\n\n.react-revolver-menu .circle-container img {\n  display: block;\n  width: 100%;\n}\n", ""]);
 
 	// exports
 

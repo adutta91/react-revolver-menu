@@ -124,13 +124,6 @@ export default class ReactRevolverMenu extends Component {
         transform : `rotate(${deg}deg) translate(${width}) rotate(${deg * -1}deg)`
       };
 
-      // TODO: swing animation
-      if (!this.state.showStyle[idx]) {
-
-      } else {
-
-      }
-
       return style;
     }
 
@@ -190,7 +183,6 @@ export default class ReactRevolverMenu extends Component {
       let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
       if (!this.state.history.length) back = null;
 
-      // TODO: display prev selected item in center
       return (
         <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}>
           {back}
