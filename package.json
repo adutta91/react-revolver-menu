@@ -1,22 +1,23 @@
 {
   "name": "react-revolver-menu",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "react revolver menu",
-  "scripts": {
-    "test": "eslint lib/ spec/ && ./node_modules/karma/bin/karma start karma.conf.js",
-    "watch-test": "./node_modules/karma/bin/karma start karma.conf.js --auto-watch --no-single-run",
-    "build": "webpack -p",
-    "rename-css-bower-dependencies": "find bower_components -name '*.css' | sed -e 'p;s/.css$/.scss/' | xargs -n2 mv",
-    "start": "webpack-dev-server --inline --hot",
-    "postinstall": "bower install"
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adutta91/react-revolver-menu"
   },
-  "author": "",
-  "license": "BSD",
   "keywords": [
     "react",
     "reactjs",
     "react-component"
   ],
+  "author": "Arjun",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/adutta91/react-revolver-menu/issues"
+  },
+  "homepage": "https://github.com/adutta91/react-revolver-menu",
   "devDependencies": {
     "babel-core": "~5.8.22",
     "babel-eslint": "^4.0.10",
