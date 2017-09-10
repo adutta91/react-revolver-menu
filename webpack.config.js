@@ -7,7 +7,7 @@ module.exports = {
   output : {
     path: __dirname,
     filename: 'main.js',
-    publicPath: '/assets/'
+    publicPath: '/lib/'
   },
   cache: true,
   debug: false,

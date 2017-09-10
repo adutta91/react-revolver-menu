@@ -6,7 +6,7 @@ var path = require('path');
 
 module.exports = {
   output: {
-    path: __dirname + '/dist/',
+    path: __dirname + '/lib/',
     filename: 'react-revolver-menu.js',
     libraryTarget: 'umd'
   },
