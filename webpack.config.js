@@ -5,10 +5,11 @@ var webpack = require('webpack');
 
 module.exports = {
   output : {
-    path: __dirname,
-    filename: 'main.js',
+    path: __dirname + '/lib/',
+    filename: 'demo.js',
     publicPath: '/lib/'
   },
+
   cache: true,
   debug: false,
   devtool: false,
