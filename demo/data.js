@@ -2,7 +2,7 @@ export const exampleData = {
   animateDelay : 10,
   diameter     : 10,
   border       : 'dashed',
-  animateStyle : 'swing',
+  animateStyle : 'radiate',
   items        : [
     {
       type   : 'icon',

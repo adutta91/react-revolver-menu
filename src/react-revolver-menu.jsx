@@ -161,6 +161,10 @@ export default class ReactRevolverMenu extends Component {
         style     : style,
       };
 
+      return this.itemSwitchBoard(item, props);
+    }
+
+    itemSwitchBoard(item, props) {
       switch(item.type) {
         case 'img':
           return <div {...props} ><img src={item.src} /></div>;
@@ -180,12 +184,25 @@ export default class ReactRevolverMenu extends Component {
     }
 
     renderCenter() {
-      let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
-      if (!this.state.history.length) back = null;
-
+      let back = <i className='fa fa-3x fa-arrow-circle-o-left'/>;
+      let center, props;
+      console.log(this.state.showStyle);
+      if (!this.state.history.length) {
+        center = null;
+        back = null;
+      } else {
+        props = {
+          className : `menu-item ${this.state.showStyle[0] ? 'show' : ''}`,
+          onClick   : this.back.bind(this)
+        };
+        center = this.props;
+        _.forEach(this.state.history, (idx) => {
+          center = center.items[idx]
+        });
+      }
       return (
         <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}>
-          {back}
+          {center ? this.itemSwitchBoard(center, props) : back}
         </div>
       );
     }
