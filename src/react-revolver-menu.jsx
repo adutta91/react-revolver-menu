@@ -128,7 +128,7 @@ export default class ReactRevolverMenu extends Component {
     }
 
     radiateStyle(item, interval, idx) {
-      if (!this.state.showStyle[idx] || item.className == 'center') return {};
+      if (item.className == 'center' || !this.state.showStyle[idx]) return {};
       let width = `${this.props.diameter}em` || '12em';
       let deg = (interval * idx) - 90;
 
@@ -184,9 +184,9 @@ export default class ReactRevolverMenu extends Component {
     }
 
     renderCenter() {
-      let back = <i className='fa fa-3x fa-arrow-circle-o-left'/>;
+      let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
       let center, props;
-      console.log(this.state.showStyle);
+
       if (!this.state.history.length) {
         center = null;
         back = null;
@@ -202,8 +202,9 @@ export default class ReactRevolverMenu extends Component {
       }
       return (
         <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}>
-          {center ? this.itemSwitchBoard(center, props) : back}
+          { center ? back : null }
         </div>
+        // {center ? this.itemSwitchBoard(center, props) : back}
       );
     }
 
