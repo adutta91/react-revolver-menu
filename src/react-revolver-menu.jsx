@@ -171,7 +171,7 @@ export default class ReactRevolverMenu extends Component {
         case 'text':
           return <div {...props}>{item.text}</div>;
         case 'icon':
-          return <div {...props}><i className={item.faIcon} /></div>;
+          return <div {...props}><i className={item.icon} /></div>;
       }
     }
 
@@ -226,7 +226,7 @@ ReactRevolverMenu.propTypes = {
     type      : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
     text      : PropTypes.string,
     src       : PropTypes.string,
-    faIcon    : PropTypes.string,
+    icon    : PropTypes.string,
     className : PropTypes.string,
     items     : PropTypes.arrayOf(PropTypes.object),
     onClick   : PropTypes.func

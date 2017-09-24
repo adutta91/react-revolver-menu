@@ -1,28 +1,59 @@
 # react revolver menu
 WIP
 
-
-
-
 # Props
-```
+```js
 items : PropTypes.arrayOf(PropTypes.shape({
   type      : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
-  key       : PropTypes.oneOfType([
-    PropTypes.number, PropTypes.string
-  ]).isRequired,
   text      : PropTypes.string,
   src       : PropTypes.string,
-  faIcon    : PropTypes.string,
+  icon      : PropTypes.string,
   className : PropTypes.string,
   items     : PropTypes.arrayOf(PropTypes.object),
   onClick   : PropTypes.func
 })).isRequired,
 diameter     : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 animateDelay : PropTypes.number,
+animateStyle : PropTypes.oneOf(['radiate', 'swing']),
 border       : PropTypes.oneOf(['dashed', 'solid', 'none'])
 ```
 
+## items (*required*)
+Array of objects that signify the items in the menu
+Each item has can have an optional array of items that are the next level of the
+menu when the item is clicked.
+
+### type (*required*)
+`string` - either `img`, `icon`, `text`
+### text
+`string` - Text to display as menu item. Required if type = `text`.
+### src
+`string` - Url of image. Required if type = `img`.
+### icon
+`string` - font-awesome icon className. Required if type = `icon`.
+### className
+`string` - optional className for the item
+### items
+`array` - array of item objects - sub-items when item is clicked
+### onClick
+`function` - callback called when item is clicked
+
+## diameter
+diameter of the menu, can me a number (in pixels) or a string (eg. `300px`)
+
+## animateDelay
+the delay between each item in menu showing during transitions
+
+## animateStyle
+either 'radiate' or 'swing' - type of transition between menu sub-items
+
+## border
+either 'dashed', 'solid', 'none', or none - type of border around the menu
+
+
+# Usage
+
+`npm install react-revolver-menu`
 
 Get the AMD module located at `react-revolver-menu.js` and include it in your project.
 
@@ -44,7 +75,7 @@ require(['react', 'ReactRevolverMenu'], function(React, ReactRevolverMenu) {
 ```
 
 ## Development
-
+* clone repo && `npm install`
 * Development server `npm start`.
 * Continuously run tests on file changes `npm run watch-test`;
 * Run tests: `npm test`;
