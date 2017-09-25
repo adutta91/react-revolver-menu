@@ -63,6 +63,7 @@
     transition: all .2s ease-out;
     opacity: 0;
     position: absolute;
+    width: max-content;
   }
 
   .menu-item .popover.bottom {
