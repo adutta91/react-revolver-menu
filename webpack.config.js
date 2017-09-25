@@ -4,11 +4,11 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-// NOTE - production webpack
+  // NOTE - production webpack
   // output: {
   //   path: __dirname + '/lib/',
   //   filename: 'react-revolver-menu.js',
-  //   libraryTarget: 'umd'
+  //   publicPath: '/lib/'
   // },
   // entry: './index.js',
 
