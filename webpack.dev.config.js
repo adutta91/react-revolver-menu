@@ -1,29 +1,27 @@
 'use strict'
-
-var webpack = require('webpack');
+/* jshint node: true */
 var path = require('path');
-
+var webpack = require('webpack');
 
 module.exports = {
-  output: {
+  output : {
     path: __dirname + '/lib/',
-    filename: 'react-revolver-menu.js',
-    libraryTarget: 'umd'
+    filename: 'demo.js',
+    publicPath: '/lib/'
   },
-
+  entry: [
+    './demo/app.js'
+  ],
+  cache: true,
   debug: false,
   devtool: false,
-  entry: './index.js',
-
   stats: {
     colors: true,
-    reasons: false
+    reasons: true
   },
-
   resolve: {
     extensions: ['', '.js', '.jsx']
   },
-
   module: {
     loaders: [
       {
@@ -43,21 +41,5 @@ module.exports = {
         }
       }
     ]
-  },
-  externals: [
-    {
-      "react": {
-        root: "React",
-        commonjs2: "react",
-        commonjs: "react",
-        amd: "react"
-      },
-      "react-dom": {
-        root: "ReactDom",
-        commonjs2: "react-dom",
-        commonjs: "react-dom",
-        amd: "react-dom"
-      }
-    }
-  ]
-};
+  }
+}
