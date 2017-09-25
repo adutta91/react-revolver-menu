@@ -1,5 +1,5 @@
 'use strict';
 
-var ReactRevolverMenu = require('./lib/react-revolver-menu');
+var ReactRevolverMenu = require('./src/react-revolver-menu.jsx');
 
 module.exports = ReactRevolverMenu;
