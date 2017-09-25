@@ -1,16 +1,26 @@
 # react revolver menu
 WIP
 
+The React Revolver Menu is an arbitrarily deep menu React Component
+Items are arranged in a circle and all subsequent items will replace previous items
+in the circle. A 'back' button appears in the center of the menu if there are
+previous items in the hierarchy;
+
+See it in action [here](www.arjundutta.codes)
+
+
 # Props
 ```js
 items : PropTypes.arrayOf(PropTypes.shape({
-  type      : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
-  text      : PropTypes.string,
-  src       : PropTypes.string,
-  icon      : PropTypes.string,
-  className : PropTypes.string,
-  items     : PropTypes.arrayOf(PropTypes.object),
-  onClick   : PropTypes.func
+  type              : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
+  text              : PropTypes.string,
+  src               : PropTypes.string,
+  icon              : PropTypes.string,
+  className         : PropTypes.string,
+  popover           : PropTypes.string,
+  popoverPosition   : PropTypes.oneOf(['bottom', 'top', 'right', 'left']),
+  items             : PropTypes.arrayOf(PropTypes.object),
+  onClick           : PropTypes.func,
 })).isRequired,
 diameter     : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 animateDelay : PropTypes.number,
@@ -33,6 +43,10 @@ menu when the item is clicked.
 `string` - font-awesome icon className. Required if type = `icon`.
 ### className
 `string` - optional className for the item
+### popover
+`string` - optional popover text on item hover
+### popover
+`string` - optional popover position - either `top`, `bottom`, `right`, or `left`
 ### items
 `array` - array of item objects - sub-items when item is clicked
 ### onClick

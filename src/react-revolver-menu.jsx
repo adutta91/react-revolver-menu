@@ -13,7 +13,8 @@ export default class ReactRevolverMenu extends Component {
         subItems  : [],
         timeout   : false,
         timeoutCb : null,
-        history   : []
+        history   : [],
+        hovered   : {}
       };
     }
 
@@ -93,6 +94,12 @@ export default class ReactRevolverMenu extends Component {
       }
     }
 
+    setOnHover(idx, val) {
+      let hovered = this.state.hovered;
+      hovered[idx] = val;
+      this.setState({ hovered });
+    }
+
     circleStyle() {
       let width = parseInt(this.props.diameter) || 12;
 
@@ -155,24 +162,47 @@ export default class ReactRevolverMenu extends Component {
       const style = this.getStyle(item, interval, idx);
 
       const props = {
-        key       : idx,
-        className : `menu-item ${item.className || ''} ${this.state.showStyle[idx] ? 'show' : ''}`,
-        onClick   : this.itemClick.bind(this, item, idx),
-        style     : style,
+        key          : idx,
+        className    : `menu-item ${item.className || ''} ${this.state.showStyle[idx] ? 'show' : ''}`,
+        onClick      : this.itemClick.bind(this, item, idx),
+        style        : style,
+        onMouseOver  : this.setOnHover.bind(this, idx, true),
+        onMouseLeave : this.setOnHover.bind(this, idx, false)
       };
 
-      return this.itemSwitchBoard(item, props);
+      return this.itemSwitchBoard(item, props, idx);
     }
 
-    itemSwitchBoard(item, props) {
+    itemSwitchBoard(item, props, idx) {
+      let popover = this.renderPopover(item, idx);
       switch(item.type) {
         case 'img':
-          return <div {...props} ><img src={item.src} /></div>;
+          return <div {...props} ><img src={item.src} />{popover}</div>;
         case 'text':
-          return <div {...props}>{item.text}</div>;
+          return <div {...props}>{item.text}{popover}</div>;
         case 'icon':
-          return <div {...props}><i className={item.icon} /></div>;
+          return <div {...props}><i className={item.icon} />{popover}</div>;
       }
+    }
+
+    renderPopover(item, idx) {
+      if (item.popover) {
+        let className = 'popover';
+        if (this.state.hovered[idx]) {
+          className += ' show';
+          switch(item.popoverPosition) {
+            case 'top': break; className += ' top';
+            case 'bottom': break; className += ' bottom';
+            case 'right': break; className += ' right';
+            case 'left': break; className += ' left';
+            default: break; className += ' bottom';
+          }
+          if (item.popoverPosition == 'top') className += ' top'
+          else className += ' bottom'
+        }
+
+        return <div className={className}>{item.popover}</div>
+      } else return null;
     }
 
     renderItems() {
@@ -223,13 +253,15 @@ export default class ReactRevolverMenu extends Component {
 
 ReactRevolverMenu.propTypes = {
   items : PropTypes.arrayOf(PropTypes.shape({
-    type      : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
-    text      : PropTypes.string,
-    src       : PropTypes.string,
-    icon    : PropTypes.string,
-    className : PropTypes.string,
-    items     : PropTypes.arrayOf(PropTypes.object),
-    onClick   : PropTypes.func
+    type            : PropTypes.oneOf(['img', 'icon', 'text']).isRequired,
+    text            : PropTypes.string,
+    src             : PropTypes.string,
+    icon            : PropTypes.string,
+    popover         : PropTypes.string,
+    popoverPosition : PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
+    items           : PropTypes.arrayOf(PropTypes.object),
+    onClick         : PropTypes.func,
+    className       : PropTypes.string
   })).isRequired,
   diameter     : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   animateDelay : PropTypes.number,

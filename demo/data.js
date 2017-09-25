@@ -5,9 +5,11 @@ export const exampleData = {
   animateStyle : 'radiate',
   items        : [
     {
-      type   : 'icon',
-      faIcon : 'fa fa-user-circle-o fa-3x',
-      items : [
+      type            : 'icon',
+      icon            : 'fa fa-user-circle-o fa-3x',
+      popover         : 'test',
+      popoverPosition : 'bottom',
+      items           : [
         {
           type  : 'text',
           text  : '4',
@@ -54,35 +56,47 @@ export const exampleData = {
       ],
     },
     {
-      type    : 'icon',
-      faIcon  : 'fa fa-question-circle-o fa-3x',
-      items   : [],
+      type  : 'icon',
+      icon  : 'fa fa-question-circle-o fa-3x',
+      popover         : 'test',
+      popoverPosition : 'bottom',
+      items : [],
       onClick : () => { window.alert('yay!!! you found ze treasure!!!'); }
     },
     {
-      type   : 'icon',
-      faIcon : 'fa fa-book fa-3x',
-      items  : [],
+      type  : 'icon',
+      icon  : 'fa fa-book fa-3x',
+      popover         : 'test',
+      popoverPosition : 'bottom',
+      items : [],
     },
     {
-      type   : 'icon',
-      faIcon : 'fa fa-bell fa-3x',
-      items  : [],
+      type  : 'icon',
+      icon  : 'fa fa-bell fa-3x',
+      popover         : 'test',
+      popoverPosition : 'bottom',
+      items : [],
     },
     {
-      type   : 'icon',
-      faIcon : 'fa fa-binoculars fa-3x',
-      items  : [],
+      type  : 'icon',
+      icon  : 'fa fa-binoculars fa-3x',
+      popover         : 'test',
+      popoverPosition : 'bottom',
+      items : [],
     },
     {
-      type   : 'icon',
-      faIcon : 'fa fa-beer fa-3x',
-      items  : [],
+      type  : 'icon',
+      icon  : 'fa fa-beer fa-3x',
+      popover         : 'test',
+      popoverPosition : 'bottom',
+      items : [],
     },
     {
-      type   : 'icon',
-      faIcon : 'fa fa-car fa-3x',
-      items  : [],
+      type  : 'icon',
+      icon  : 'fa fa-car fa-3x',
+      popover         : 'test',
+      popoverPosition : 'bottom',
+      items : [],
     },
   ]
 };
