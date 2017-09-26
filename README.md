@@ -6,7 +6,7 @@ Items are arranged in a circle and all subsequent items will replace previous it
 in the circle. A 'back' button appears in the center of the menu if there are
 previous items in the hierarchy;
 
-See it in action [here](www.arjundutta.codes)
+See it in action [here](http://www.arjundutta.codes)
 
 
 # Props

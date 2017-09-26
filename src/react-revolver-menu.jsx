@@ -85,6 +85,7 @@ export default class ReactRevolverMenu extends Component {
         this.setState({
           timeout   : true,
           history   : history,
+          hovered   : {},
           timeoutCb : () => {
             this.setState({
               subItems : item.items
