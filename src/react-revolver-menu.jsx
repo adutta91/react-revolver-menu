@@ -215,7 +215,8 @@ export default class ReactRevolverMenu extends Component {
     }
 
     renderCenter() {
-      let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
+      let back = <span onClick={this.back.bind(this)}>Back</span>;
+      // let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
       let center, props;
 
       // if no recorded click history, return null
@@ -230,7 +231,7 @@ export default class ReactRevolverMenu extends Component {
       }
       return (
         <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}>
-          { center ? back : this.state.showStyle ? 'back' : null }
+          { center ? back : null }
         </div>
       );
     }
