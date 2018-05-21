@@ -25,7 +25,7 @@ export default class ReactRevolverMenu extends Component {
     componentWillUnmount() {
       clearTimeout(this.timeout);
     }
-
+    
     startTimeout(cb) {
       this.timeout = setTimeout(() => {
         if (this.state.timeoutCb) this.state.timeoutCb();
@@ -218,14 +218,11 @@ export default class ReactRevolverMenu extends Component {
       let back = <i className='fa fa-3x fa-arrow-circle-o-left' onClick={this.back.bind(this)}/>;
       let center, props;
 
+      // if no recorded click history, return null
       if (!this.state.history.length) {
         center = null;
         back = null;
       } else {
-        props = {
-          className : `menu-item ${this.state.showStyle[0] ? 'show' : ''}`,
-          onClick   : this.back.bind(this)
-        };
         center = this.props;
         _.forEach(this.state.history, (idx) => {
           center = center.items[idx]
@@ -233,9 +230,8 @@ export default class ReactRevolverMenu extends Component {
       }
       return (
         <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}>
-          { center ? back : null }
+          { center ? back : this.state.showStyle ? 'back' : null }
         </div>
-        // {center ? this.itemSwitchBoard(center, props) : back}
       );
     }
 
