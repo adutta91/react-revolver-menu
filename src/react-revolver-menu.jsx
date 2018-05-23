@@ -236,7 +236,7 @@ export default class ReactRevolverMenu extends Component {
         });
       }
       return (
-        <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`}>
+        <div className={`menu-item center ${this.state.showStyle ? 'show' : ''}`} onClick={(e) => { e.stopPropagation(); e.preventDefault(); }}>
           { center ? back : null }
         </div>
       );
