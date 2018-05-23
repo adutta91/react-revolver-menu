@@ -80,6 +80,7 @@ export default class ReactRevolverMenu extends Component {
     itemClick(item, idx, e) {
       e.preventDefault();
       e.stopPropagation();
+      
       if (typeof item.onClick == 'function') item.onClick();
       if (item.items && item.items.length) {
         this.setStyles(false);
