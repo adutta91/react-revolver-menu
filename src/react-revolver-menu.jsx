@@ -26,7 +26,7 @@ export default class ReactRevolverMenu extends Component {
       clearTimeout(this.timeout);
     }
     
-    startTimeout(cb) {
+    startTimeout() {
       this.timeout = setTimeout(() => {
         if (this.state.timeoutCb) this.state.timeoutCb();
         this.setStyles(true);
@@ -203,7 +203,9 @@ export default class ReactRevolverMenu extends Component {
         }
 
         return <div className={className}>{item.popover}</div>
-      } else return null;
+      } else {
+        return null;
+      }
     }
 
     renderItems() {
