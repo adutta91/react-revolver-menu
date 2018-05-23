@@ -4,13 +4,13 @@ var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  output : {
-    path: __dirname + '/lib/',
-    filename: 'demo.js',
+  output: {
+    path: path.resolve(__dirname, 'lib'),
+    filename: 'react-revolver-menu.js',
     publicPath: '/lib/'
   },
   entry: [
-    './demo/app.js'
+    './index.js'
   ],
   cache: true,
   debug: false,

@@ -6,8 +6,8 @@ var path = require('path');
 
 module.exports = {
   output: {
-    path: __dirname + '/lib/',
-    filename: 'index.js',
+    path: path.resolve(__dirname, 'lib'),
+    filename: 'react-revolver-menu.js',
     libraryTarget: 'commonjs2'
   },
 
@@ -57,7 +57,7 @@ module.exports = {
         commonjs2: "react-dom",
         commonjs: "react-dom",
         amd: "react-dom"
-      }
+      },
     }
   ]
 };
