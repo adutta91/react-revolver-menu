@@ -57,7 +57,10 @@ export default class ReactRevolverMenu extends Component {
       });
     }
 
-    back() {
+    back(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
       let items = this.props.items; // TODO - choose proper back
       _.forEach(this.state.history.slice(0, this.state.history.length - 1), (prevIdx) => {
         items = items[prevIdx].items;
