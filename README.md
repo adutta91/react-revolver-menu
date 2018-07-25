@@ -1,5 +1,5 @@
-# react revolver menu
-WIP
+# React Revolver Menu
+(WIP)
 
 The React Revolver Menu is an arbitrarily deep menu React Component
 Items are arranged in a circle and all subsequent items will replace previous items
